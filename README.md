@@ -28,10 +28,10 @@ Follow these steps to get the API running on your local machine.
 
 ### 1. Installation
 
-Install all necessary Python packages:
+Install all necessary Python packages after creating a virtual environment:
 
 ```bash
-uv sync
+pip install -r requirements.txt
 ```
 
 ### 2. Run the server
@@ -39,7 +39,7 @@ uv sync
 The application code is saved in a file named main.py
 
 ```bash
-uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 The server will be accessible at `http://127.0.0.1:8000`. The reload flag is optional
