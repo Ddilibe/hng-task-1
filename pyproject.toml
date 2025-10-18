@@ -1,0 +1,11 @@
+[project]
+name = "hng-stage-0"
+version = "0.1.0"
+description = "The first Task for HNG"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.119.0",
+    "requests>=2.32.5",
+    "uvicorn>=0.37.0",
+]
