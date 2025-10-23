@@ -30,6 +30,7 @@ import uvicorn
 import requests
 from decouple import config
 
+
 ##########################################################################
 # Natural Language filter class
 ##########################################################################
@@ -191,6 +192,7 @@ app.add_middleware(
     allow_methods=["*"],
 )
 
+
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(req: Request, exc: RequestValidationError):
     """Handles validation errors for incoming requests.
@@ -212,6 +214,7 @@ async def validation_exception_handler(req: Request, exc: RequestValidationError
         status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
         content={"detail": "invalid datatype for 'value' (must be string) "},
     )
+
 
 @dataclass
 class User:
@@ -310,6 +313,7 @@ async def me():
             detail="Random Cat server is down. Try again after a while ",
         )
 
+
 ##########################################################################
 # DB Table
 ##########################################################################
@@ -326,6 +330,7 @@ class String(SQLModel, table=True):
     """
 
     __tablename__ = "strings"  # type: ignore
+    __table_args__ = {"extend_existing": True}
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
     name: str
