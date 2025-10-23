@@ -23,8 +23,8 @@ from fastapi.exceptions import RequestValidationError
 from sqlmodel import JSON, Column, SQLModel, Field, create_engine, Session, select
 
 import spacy
-from spacy.language import Language
 from spacy.matcher import Matcher
+from spacy.language import Language
 
 import uvicorn
 import requests
