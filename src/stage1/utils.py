@@ -4,6 +4,7 @@ import re
 import json
 
 from google import genai
+from decouple import config
 
 from fastapi import status
 from fastapi.responses import JSONResponse
@@ -21,7 +22,7 @@ class NaturalLangFilter:
     """
 
     def __init__(self):
-        self.client = genai.Client(api_key="AIzaSyDxzLjorh4rE013acivV_EioV0P-DEKxxU")
+        self.client = genai.Client(api_key=str(config("GOOGLE_GEN_API_KEY", ""))
 
     def query_json(self, query):
 
