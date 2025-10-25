@@ -22,7 +22,10 @@ class NaturalLangFilter:
     """
 
     def __init__(self):
-        self.client = genai.Client(api_key=str(config("GOOGLE_GEN_API_KEY", ""))
+        try:
+            self.client = genai.Client(api_key=str(config("GOOGLE_GEN_API_KEY", "")))
+        except AttributeError:
+            pass
 
     def query_json(self, query):
 
