@@ -6,6 +6,7 @@
 # a timestamp, and a random cat fact fetched from an external API.
 
 import json
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, status
 from fastapi.requests import Request
@@ -17,14 +18,24 @@ from src import init_db, stage0, stage1
 import uvicorn
 
 
-##########################################################################
-# Natural Language filter class
-##########################################################################
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Run the table creation function only once when the server starts.
+    This prevents the 'Table already defined' error.
+    """
+    try:
+        init_db()
+        yield
+    finally:
+        pass
+
 
 # Initialize the FastAPI application.
 app = FastAPI(
     debug=False,
     title="HNG Stage 1 Task",
+    lifespan=lifespan
 )
 
 # Configure Cross-Origin Resource Sharing (CORS) middleware.
@@ -37,6 +48,7 @@ app.add_middleware(
     allow_origins=["*"],
     allow_methods=["*"],
 )
+
 
 
 @app.exception_handler(RequestValidationError)
@@ -72,15 +84,6 @@ def main_app():
 
 app.include_router(stage0, tags=["stage0"])
 app.include_router(stage1, tags=["stage1"])
-
-
-@app.on_event("startup")
-def on_startup():
-    """
-    Run the table creation function only once when the server starts.
-    This prevents the 'Table already defined' error.
-    """
-    init_db()
 
 
 if __name__ == "__main__":
