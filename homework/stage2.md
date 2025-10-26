@@ -23,17 +23,18 @@ Build a RESTful API that fetches country data from an external API, stores it in
 - **GET /status** → Show total countries and last refresh timestamp
 - **GET /countries/image** → serve summary image
 
-**Country Fields**\
- id — auto-generated \
- name — required\
- capital — optional\
- region — optional\
- population — required\
- currency_code — required\
- exchange_rate — required\
- estimated_gdp — computed from population × random(1000–2000) ÷ \exchange_rate
- flag_url — optional\
- last_refreshed_at — auto timestamp\
+**Country Fields**
+
+    id — auto-generated
+    name — required
+    capital — optional
+    region — optional
+    population — required
+    currency_code — required
+    exchange_rate — required
+    estimated_gdp — computed from population × random(1000–2000) ÷ exchange_rate
+    flag_url — optional
+    last_refreshed_at — auto timestamp
 
 
 **✔️ Validation Rules**
