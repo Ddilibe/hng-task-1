@@ -2,6 +2,7 @@
 
 from src.stage0 import app as stage0
 from src.stage1.main import app as stage1
+from src.stage2.main import app as stage2
 
 from decouple import config
 
@@ -25,5 +26,5 @@ engine = create_engine(sqlite_url, echo=True)
 
 # Create all database tables defined in the SQLModel metadata
 # This ensures that any models mapped to the database are initialized
-def init_db():
+async def init_db():
     SQLModel.metadata.create_all(engine)

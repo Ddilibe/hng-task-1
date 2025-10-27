@@ -8,14 +8,15 @@
 import json
 from contextlib import asynccontextmanager
 
+import uvicorn
 from fastapi import FastAPI, status
 from fastapi.requests import Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, JSONResponse
 from fastapi.exceptions import RequestValidationError
 
-from src import init_db, stage0, stage1
-import uvicorn
+from src import init_db, stage0, stage1, stage2
+from src.stage2.utils import Stage2Exception, remove_countries, upload_countries
 
 
 @asynccontextmanager
@@ -24,19 +25,17 @@ async def lifespan(app: FastAPI):
     Run the table creation function only once when the server starts.
     This prevents the 'Table already defined' error.
     """
-    try:
-        init_db()
-        yield
-    finally:
-        pass
+    await init_db()
+    # try:
+    # await upload_countries()
+    # except Exception as e:
+    # print(f"⚠️ Country upload failed: {e}")
+    yield
+    # await close_db_connection()
 
 
 # Initialize the FastAPI application.
-app = FastAPI(
-    debug=False,
-    title="HNG Stage 1 Task",
-    lifespan=lifespan
-)
+app = FastAPI(debug=False, title="HNG Stage 1 Task", lifespan=lifespan)
 
 # Configure Cross-Origin Resource Sharing (CORS) middleware.
 # This allows the API to be accessed from any domain and with any method,
@@ -48,7 +47,6 @@ app.add_middleware(
     allow_origins=["*"],
     allow_methods=["*"],
 )
-
 
 
 @app.exception_handler(RequestValidationError)
@@ -74,6 +72,16 @@ async def validation_exception_handler(req: Request, exc: RequestValidationError
     )
 
 
+@app.exception_handler(Stage2Exception)
+async def custom_exception_handler(request: Request, exc: Stage2Exception):
+    return JSONResponse(
+        status_code=400,
+        content={
+            "error": exc.detail,
+        },
+    )
+
+
 @app.get("/")
 def main_app():
     return Response(
@@ -82,8 +90,9 @@ def main_app():
     )
 
 
-app.include_router(stage0, tags=["stage0"])
-app.include_router(stage1, tags=["stage1"])
+app.include_router(stage0, tags=["Stage 0"])
+app.include_router(stage1, tags=["Stage 1"])
+app.include_router(stage2, tags=["Stage 2"])
 
 
 if __name__ == "__main__":
